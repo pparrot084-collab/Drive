@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Windows Drivers Installer</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #2c3e8f);
+            color: #fff;
+            min-height: 100vh;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        body::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 10% 20%, rgba(255,255,255,0.1) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(255,255,255,0.1) 0%, transparent 20%);
+            z-index: -1;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            text-align: center;
+            padding: 30px 0;
+            margin-bottom: 40px;
+            position: relative;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .logo i {
+            font-size: 2.5rem;
+            color: #00a4ef;
+            background: rgba(255, 255, 255, 0.1);
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        h1 {
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+            background: linear-gradient(to right, #00a4ef, #7f8fff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+            line-height: 1.6;
+        }
+        
+        .windows-logo {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin: 25px 0;
+            flex-wrap: wrap;
+        }
+        
+        .windows-logo .logo-item {
+            background: rgba(255, 255, 255, 0.08);
+            padding: 12px 25px;
+            border-radius: 30px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .windows-logo .logo-item i {
+            font-size: 1.4rem;
+        }
+        
+        .windows-logo .logo-item:nth-child(1) { color: #f34b7d; }
+        .windows-logo .logo-item:nth-child(2) { color: #3498db; }
+        .windows-logo .logo-item:nth-child(3) { color: #2ecc71; }
+        
+        .drivers-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+        
+        .driver-card {
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .driver-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+            background: rgba(255, 255, 255, 0.12);
+        }
+        
+        .driver-card h2 {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            color: #00a4ef;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .driver-card h2 i {
+            font-size: 1.5rem;
+        }
+        
+        .details {
+            margin: 25px 0;
+            text-align: left;
+        }
+        
+        .detail-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .detail-item:last-child {
+            border-bottom: none;
+        }
+        
+        .detail-item .label {
+            font-weight: 600;
+            opacity: 0.8;
+        }
+        
+        .download-btn {
+            background: linear-gradient(to right, #00a4ef, #0078d7);
+            color: white;
+            border: none;
+            padding: 14px 30px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 132, 255, 0.4);
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .download-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0, 132, 255, 0.6);
+            background: linear-gradient(to right, #0078d7, #0062b0);
+        }
+        
+        .download-btn:active {
+            transform: translateY(1px);
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(5px);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .modal-content {
+            background: linear-gradient(135deg, #2c3e8f, #1a2a6c);
+            width: 100%;
+            max-width: 500px;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+            position: relative;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .close-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 1.8rem;
+            background: none;
+            border: none;
+            color: #fff;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.3s;
+        }
+        
+        .close-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        .modal h2 {
+            text-align: center;
+            margin-bottom: 25px;
+            font-size: 2rem;
+            color: #00a4ef;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            opacity: 0.9;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 14px;
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            background: rgba(0, 0, 0, 0.2);
+            color: white;
+            font-size: 1rem;
+        }
+        
+        .form-group input:focus {
+            outline: none;
+            border-color: #00a4ef;
+            box-shadow: 0 0 0 3px rgba(0, 164, 239, 0.3);
+        }
+        
+        .submit-btn {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(to right, #e74c3c, #c0392b);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s;
+            margin-top: 10px;
+        }
+        
+        .submit-btn:hover {
+            background: linear-gradient(to right, #c0392b, #a93226);
+        }
+        
+        .error-message {
+            background: rgba(231, 76, 60, 0.2);
+            border: 1px solid #e74c3c;
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 20px;
+            display: none;
+        }
+        
+        .error-message i {
+            margin-right: 10px;
+            color: #e74c3c;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 60px;
+            padding: 20px;
+            font-size: 0.9rem;
+            opacity: 0.7;
+        }
+        
+        .security {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 25px;
+            flex-wrap: wrap;
+        }
+        
+        .security-item {
+            background: rgba(255, 255, 255, 0.08);
+            padding: 8px 15px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 768px) {
+            .drivers-container {
+                grid-template-columns: 1fr;
+            }
+            
+            h1 {
+                font-size: 2.2rem;
+            }
+            
+            .windows-logo {
+                gap: 15px;
+            }
+            
+            .windows-logo .logo-item {
+                padding: 8px 15px;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <i class="fas fa-download"></i>
+                <h1>Windows Drivers Installer</h1>
+            </div>
+            <p class="subtitle">Complete driver packs for all Windows versions. One-click installation for all your hardware drivers.</p>
+            
+            <div class="windows-logo">
+                <div class="logo-item">
+                    <i class="fab fa-windows"></i>
+                    <span>Windows 8</span>
+                </div>
+                <div class="logo-item">
+                    <i class="fab fa-windows"></i>
+                    <span>Windows 10</span>
+                </div>
+                <div class="logo-item">
+                    <i class="fab fa-windows"></i>
+                    <span>Windows 11</span>
+                </div>
+            </div>
+        </header>
+        
+        <div class="drivers-container">
+            <div class="driver-card">
+                <h2><i class="fab fa-windows"></i> Windows 8</h2>
+                <div class="details">
+                    <div class="detail-item">
+                        <span class="label">File Size:</span>
+                        <span>2.4 GB</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="label">Components:</span>
+                        <span>350+ drivers</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="label">Last Updated:</span>
+                        <span>June 2023</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="label">Compatibility:</span>
+                        <span>64-bit systems</span>
+                    </div>
+                </div>
+                <button class="download-btn" onclick="openPaymentModal('Windows 8 Driver Pack')">
+                    <i class="fas fa-download"></i> Download Now
+                </button>
+            </div>
+            
+            <div class="driver-card">
+                <h2><i class="fab fa-windows"></i> Windows 10</h2>
+                <div class="details">
+                    <div class="detail-item">
+                        <span class="label">File Size:</span>
+                        <span>3.1 GB</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="label">Components:</span>
+                        <span>420+ drivers</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="label">Last Updated:</span>
+                        <span>August 2023</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="label">Compatibility:</span>
+                        <span>32/64-bit systems</span>
+                    </div>
+                </div>
+                <button class="download-btn" onclick="openPaymentModal('Windows 10 Driver Pack')">
+                    <i class="fas fa-download"></i> Download Now
+                </button>
+            </div>
+            
+            <div class="driver-card">
+                <h2><i class="fab fa-windows"></i> Windows 11</h2>
+                <div class="details">
+                    <div class="detail-item">
+                        <span class="label">File Size:</span>
+                        <span>3.8 GB</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="label">Components:</span>
+                        <span>480+ drivers</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="label">Last Updated:</span>
+                        <span>September 2023</span>
+                    </div>
+                    <div class="detail-item">
+                        <span class="label">Compatibility:</span>
+                        <span>64-bit systems only</span>
+                    </div>
+                </div>
+                <button class="download-btn" onclick="openPaymentModal('Windows 11 Driver Pack')">
+                    <i class="fas fa-download"></i> Download Now
+                </button>
+            </div>
+        </div>
+        
+        <div class="security">
+            <div class="security-item">
+                <i class="fas fa-shield-alt"></i>
+                <span>Secure Payment Processing</span>
+            </div>
+            <div class="security-item">
+                <i class="fas fa-lock"></i>
+                <span>Encrypted Data Transfer</span>
+            </div>
+            <div class="security-item">
+                <i class="fas fa-malware"></i>
+                <span>Malware-Free Drivers</span>
+            </div>
+        </div>
+        
+        <footer>
+            <p>© 2023 Windows Drivers Installer. All rights reserved.</p>
+            <p>This is a simulation page. No actual payments are processed.</p>
+        </footer>
+    </div>
+    
+    <!-- Payment Modal -->
+    <div id="paymentModal" class="modal">
+        <div class="modal-content">
+            <button class="close-btn" onclick="closeModal()">&times;</button>
+            <h2><i class="fas fa-credit-card"></i> Complete Your Purchase</h2>
+            <p id="product-name" style="text-align: center; margin-bottom: 25px; opacity: 0.9;"></p>
+            
+            <form id="paymentForm">
+                <div class="form-group">
+                    <label for="fullName">Full Name</label>
+                    <input type="text" id="fullName" placeholder="John Doe" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" placeholder="john@example.com" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="cardNumber">Card Number</label>
+                    <input type="text" id="cardNumber" placeholder="1234 5678 9012 3456" required>
+                </div>
+                
+                <div style="display: flex; gap: 15px;">
+                    <div class="form-group" style="flex: 1;">
+                        <label for="expiry">Expiry Date</label>
+                        <input type="text" id="expiry" placeholder="MM/YY" required>
+                    </div>
+                    <div class="form-group" style="flex: 1;">
+                        <label for="cvv">CVV</label>
+                        <input type="text" id="cvv" placeholder="123" required>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="address">Billing Address</label>
+                    <input type="text" id="address" placeholder="123 Main St, City, Country" required>
+                </div>
+                
+                <button type="button" class="submit-btn" onclick="processPayment()">Complete Payment</button>
+            </form>
+            
+            <div class="error-message" id="errorMessage">
+                <i class="fas fa-exclamation-triangle"></i>
+                <strong>Payment Failed:</strong> We couldn't process your card. This card can't be used. Please try another card.
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        let currentProduct = '';
+        
+        function openPaymentModal(product) {
+            currentProduct = product;
+            document.getElementById('product-name').textContent = product;
+            document.getElementById('paymentModal').style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+        
+        function closeModal() {
+            document.getElementById('paymentModal').style.display = 'none';
+            document.getElementById('paymentForm').reset();
+            document.getElementById('errorMessage').style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+        
+        function processPayment() {
+            // Show loading state
+            const submitBtn = document.querySelector('.submit-btn');
+            const originalText = submitBtn.innerHTML;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+            submitBtn.disabled = true;
+            
+            // Simulate payment processing
+            setTimeout(() => {
+                // Always show error regardless of input
+                document.getElementById('errorMessage').style.display = 'block';
+                submitBtn.innerHTML = originalText;
+                submitBtn.disabled = false;
+                
+                // Scroll to error message
+                document.getElementById('errorMessage').scrollIntoView({ behavior: 'smooth' });
+            }, 2000);
+        }
+        
+        // Close modal when clicking outside
+        window.onclick = function(event) {
+            const modal = document.getElementById('paymentModal');
+            if (event.target === modal) {
+                closeModal();
+            }
+        }
+        
+        // Format card number input
+        document.getElementById('cardNumber').addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            if (value.length > 16) value = value.substring(0, 16);
+            let formatted = value.match(/.{1,4}/g)?.join(' ') || '';
+            e.target.value = formatted;
+        });
+        
+        // Format expiry date
+        document.getElementById('expiry').addEventListener('input', function(e) {
+            let value = e.target.value.replace(/\D/g, '');
+            if (value.length > 4) value = value.substring(0, 4);
+            if (value.length > 2) {
+                value = value.substring(0, 2) + '/' + value.substring(2);
+            }
+            e.target.value = value;
+        });
+    </script>
+</body>
+</html>
